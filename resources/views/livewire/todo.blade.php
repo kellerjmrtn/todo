@@ -1,6 +1,6 @@
 <div class="m-auto max-w-full lg:max-w-2xl bg-white border border-zinc-200 rounded-xl space-y-4 shadow-sm">
-    <div class="p-6">
-        <flux:heading size="xl" level="1" class="mb-6">
+    <div class="p-6 mb-0">
+        <flux:heading size="xl" level="1" class="mb-6 text-zinc-600">
             <strong>{{ $title }}</strong>
         </flux:heading>
 
@@ -11,17 +11,23 @@
                 </flux:heading>
 
                 <div class="flex flex-col divide-y">
-                    @foreach($items as $item)
-                        @if(!$item['completed'])
-                            <div class="flex justify-between border-x-1 border-zinc-300 first:border-t-1 last:border-b-1 first:rounded-t-xl last:rounded-b-xl">
-                                <span class="text-zinc-800 py-2 pl-3">{{ $item['title'] }}</span>
-                                <div class="flex">
-                                    <flux:separator vertical class="my-2" />
-                                    <flux:button icon="check" icon:variant="outline" class="border-none! rounded-xl! hover:bg-transparent! shadow-none! text-gray-700!" />
-                                </div>
+                    @forelse($items as $id => $item)
+                        <div wire:key="{{ $id }}" class="flex justify-between border-x-1 border-zinc-300 first:border-t-1 last:border-b-1 first:rounded-t-xl last:rounded-b-xl">
+                            <span class="text-zinc-800 py-2 pl-3">{{ $item }}</span>
+                            <div class="flex items-center pl-2">
+                                <flux:separator vertical class="my-2" />
+                                <flux:button
+                                    icon="check"
+                                    icon:variant="outline"
+                                    {{-- Unsure why, but shadow-none! doesn't reset the --tw-shadow, which was still causing a shadow... --}}
+                                    class="border-none! rounded-xl! hover:bg-transparent! shadow-none! text-gray-700! cursor-pointer [--tw-shadow:0_0_#0000]"
+                                    wire:click="completeItem({{ $id }})"
+                                />
                             </div>
-                        @endif
-                    @endforeach
+                        </div>
+                    @empty
+                        <flux:text>No to do items</flux:text>
+                    @endforelse
                 </div>
             </div>
 
@@ -32,30 +38,49 @@
                 </flux:heading>
 
                 <div class="flex flex-col divide-y">
-                    @foreach($items as $item)
-                        @if($item['completed'])
-                            <div class="flex justify-between border-x-1 border-zinc-300 first:border-t-1 last:border-b-1 first:rounded-t-xl last:rounded-b-xl">
-                                <span class="text-zinc-500 py-2 pl-3 line-through">{{ $item['title'] }}</span>
-                                <div class="flex">
-                                    <flux:separator vertical class="my-2" />
-                                    <flux:button icon="arrow-uturn-left" icon:variant="outline" class="border-none! rounded-xl! hover:bg-transparent! shadow-none! text-gray-700!" />
-                                    <flux:separator vertical class="my-2" />
-                                    <flux:button icon="trash" icon:variant="outline" class="border-none! rounded-xl! hover:bg-transparent! shadow-none! text-gray-700!" />
-                                </div>
+                    @forelse($completed as $id => $item)
+                        <div wire:key="{{ $id }}" class="flex justify-between border-x-1 border-zinc-300 first:border-t-1 last:border-b-1 first:rounded-t-xl last:rounded-b-xl">
+                            <span class="text-zinc-500 py-2 pl-3 line-through">{{ $item }}</span>
+                            <div class="flex items-center pl-2">
+                                <flux:separator vertical class="my-2" />
+                                <flux:button
+                                    icon="arrow-uturn-left"
+                                    icon:variant="outline"
+                                    class="border-none! rounded-xl! hover:bg-transparent! shadow-none! text-gray-700! cursor-pointer [--tw-shadow:0_0_#0000]"
+                                    wire:click="returnItem({{ $id }})"
+                                />
+                                <flux:separator vertical class="my-2" />
+                                <flux:button
+                                    icon="trash"
+                                    icon:variant="outline"
+                                    class="border-none! rounded-xl! hover:bg-transparent! shadow-none! text-gray-700! cursor-pointer [--tw-shadow:0_0_#0000]"
+                                    wire:click="deleteItem({{ $id }})"
+                                />
                             </div>
-                        @endif
-                    @endforeach
+                        </div>
+                    @empty
+                        <flux:text>No completed items</flux:text>
+                    @endforelse
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="w-full bg-zinc-100 p-6 flex">
+    <div class="w-full bg-zinc-100 p-6 flex rounded-xl">
         <flux:button.group class="w-full">
             <flux:field class="w-full">
-                <flux:input type="text"  placeholder="Add Item..."/>
+                <flux:input
+                    type="text"
+                    placeholder="Add Item..."
+                    wire:model="newItem"
+                    wire:keydown.enter="addItem"
+                />
             </flux:field>
-            <flux:button icon="plus" class="px-3! bg-zinc-50! hover:bg-zinc-100! text-zinc-500!">
+            <flux:button
+                icon="plus"
+                wire:click="addItem"
+                class="px-3! bg-zinc-50! hover:bg-zinc-100! text-zinc-500! cursor-pointer"
+            >
                 Add
             </flux:button>
         </flux:button.group>

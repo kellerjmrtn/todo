@@ -11,3 +11,5 @@ I used PHP 8.3, Laravel 12, Livewire 3, NPM 10. To install,
 # Comments
 
 I thought the Figma design looked really good, and it fit really well with Flux's components and Tailwind's styles, so I mostly followed it with a few tweaks. My implementation is responsive for all screen sizes, and is keyboard navigable. I had a good time using Flux, which I had never used before, the components were convenient and very nice looking.
+
+The app allows for adding new tasks, completing tasks, moving tasks back from completed state to to-do state, and deleting tasks once completed.

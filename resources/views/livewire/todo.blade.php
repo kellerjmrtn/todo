@@ -1,7 +1,7 @@
 <div class="m-auto max-w-full lg:max-w-2xl bg-white border border-zinc-200 rounded-xl space-y-4 shadow-sm">
     <div class="p-6 mb-0">
-        <flux:heading size="xl" level="1" class="mb-6 text-zinc-600">
-            <strong>{{ $title }}</strong>
+        <flux:heading size="xl" level="1" class="mb-6 text-zinc-600 font-bold!">
+            {{ $title }}
         </flux:heading>
 
         <div class="w-full lg:w-sm m-auto">
@@ -66,7 +66,7 @@
         </div>
     </div>
 
-    <div class="w-full bg-zinc-100 p-6 flex rounded-xl">
+    <div class="w-full bg-zinc-100 p-6 flex rounded-b-xl">
         <flux:button.group class="w-full">
             <flux:field class="w-full">
                 <flux:input
